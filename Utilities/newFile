@@ -1,0 +1,33 @@
+--Author: FunnyBunnyofDOOM
+--Title: newFile
+--Description: This program creates a default lua file
+--including author and title, and a main function.
+
+function newFile()
+    print("Enter the file name")
+    title = io.read()
+    print("Enter the file location")
+    address = io.read()
+    print("Enter the Author")
+    author = io.read()
+    fileAddr = address.."/"..title
+    
+    --Check for the file, then write the template
+    --Another option, we could copy a default file
+    --this would make it easier for the user to edit
+    --the template
+    
+    if fs.exists(fileAddr) ~= true then
+      file = fs.open(fileAddr, "w")
+      file.write("--Author: "..author.."\n")
+      file.write("--Title: "..title.."\n")
+      file.write("--Description:\n")
+      file.write("\n")
+      file.write("function main()\n")
+      file.write("\n")
+      file.write("end\n")
+      file.close()
+    end
+end
+ 
+newFile()
