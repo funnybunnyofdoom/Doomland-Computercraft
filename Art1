@@ -1,10 +1,10 @@
 --Author: FunnyBunnyofDOOM
 --Title: Art1
 --subject: It makes ART!
- 
+
 local win = term.current() --get our monitor
 local winx,winy = term.getSize() --Get the size of the monitor
- 
+
 --create an array with colors
 colorArray = {
 colors.black,
@@ -24,7 +24,7 @@ colors.red,
 colors.white,
 colors.yellow
 }
- 
+
 --picks and returns colors from colorArray
 function pickColors(qty)
     qty = qty or 1
@@ -36,18 +36,21 @@ function pickColors(qty)
     end
     return values
 end
- 
+
 function artDraw(colorQTY)
     colorQTY = colorQTY or 1
     colorSet = pickColors(colorQTY)
     curx = 1
-    cury = 1
+    cury = math.random(winy)  
+    lastRoll = 1
     while curx <=  winx do
+        os.sleep(0.1) 
         term.setCursorPos(curx,cury)
         term.setBackgroundColor(colorSet[math.random(#colorSet)])
         term.write(" ")
         curx = curx+1
-        local roll = math.random(3)
+        local roll = math.random(5)
+        
         if roll == 1 then
             if cury < winy then
                 term.setCursorPos(curx,cury)
@@ -60,11 +63,37 @@ function artDraw(colorQTY)
                 term.write(" ")
                 cury = cury - 1
             end
-            else
+        elseif roll == 3 then
             cury = cury
-        end 
+        elseif roll == 4 then
+            if cury + 2 < winy -2 then
+                if lastRoll ~= 4 and lastRoll ~= 5 then
+                    term.setCursorPos(curx,cury)
+                    term.write(" ")
+                    term.setCursorPos(curx,cury+1)
+                    term.write(" ")
+                    cury = cury + 2
+                end
+            end
+        elseif roll == 5 then
+            if cury - 2 > 1 then
+                if lastRoll ~= 4 and lastRoll ~= 5 then
+                     term.setCursorPos(curx,cury)
+                    term.write(" ")
+                    term.setCursorPos(curx,cury-1)
+                    term.write(" ")
+                    cury = cury - 2 
+                end
+            end
+           
+        end
+        lastRoll = roll 
     end
     
 end
- 
-artDraw(3) 
+
+for j=1,10 do
+term.setBackgroundColor(colors.black)
+term.clear()
+artDraw(3)
+end
