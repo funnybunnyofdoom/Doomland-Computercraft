@@ -1,0 +1,70 @@
+--Author: FunnyBunnyofDOOM
+--Title: Art1
+--subject: It makes ART!
+ 
+local win = term.current() --get our monitor
+local winx,winy = term.getSize() --Get the size of the monitor
+ 
+--create an array with colors
+colorArray = {
+colors.black,
+colors.blue,
+colors.brown,
+colors.cyan,
+colors.gray,
+colors.green,
+colors.lightBlue,
+colors.lightGray,
+colors.lime,
+colors.magenta,
+colors.orange,
+colors.pink,
+colors.purple,
+colors.red,
+colors.white,
+colors.yellow
+}
+ 
+--picks and returns colors from colorArray
+function pickColors(qty)
+    qty = qty or 1
+    local values = {}
+    for i=1,qty do
+        colNum = math.random(#colorArray)
+        col = colorArray[colNum] --This needs to be random
+        table.insert(values,col)
+    end
+    return values
+end
+ 
+function artDraw(colorQTY)
+    colorQTY = colorQTY or 1
+    colorSet = pickColors(colorQTY)
+    curx = 1
+    cury = 1
+    while curx <=  winx do
+        term.setCursorPos(curx,cury)
+        term.setBackgroundColor(colorSet[math.random(#colorSet)])
+        term.write(" ")
+        curx = curx+1
+        local roll = math.random(3)
+        if roll == 1 then
+            if cury < winy then
+                term.setCursorPos(curx,cury)
+                term.write(" ") 
+                cury = cury + 1
+            end     
+        elseif roll == 2 then
+            if cury > 1 then
+                term.setCursorPos(curx,cury)
+                term.write(" ")
+                cury = cury - 1
+            end
+            else
+            cury = cury
+        end 
+    end
+    
+end
+ 
+artDraw(3) 
