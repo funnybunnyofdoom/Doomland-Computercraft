@@ -1,0 +1,22 @@
+--author: Funnybunnyofdoom
+
+monitor = peripheral.wrap("monitor_0")
+ 
+local modem = peripheral.wrap("left")
+modem.open(5)
+ 
+while true do
+    local event, modemSide, senderChannel,replyChannel,message,senderDistance = os.pullEvent("modem_message")
+    displayPos(message)
+end
+ 
+ 
+function displayPos(posData)
+    win = window.create(monitor,2,2,10,6)
+    win.setBackgroundColor(colors.lightBlue)
+    win.clear()
+    for i = 1,#posData do
+        win.setCursorPos(1,i+1)
+        win.write(posData[i])
+    end
+end 
