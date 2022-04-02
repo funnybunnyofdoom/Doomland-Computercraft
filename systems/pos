@@ -1,0 +1,177 @@
+----Author: FunnyBunnyofDOOM
+--Title: POS
+--description: Track the turtle
+ 
+--Store old functions
+oldForward = turtle.forward 
+oldBack = turtle.back
+oldUp = turtle.up
+oldDown = turtle.down
+oldTurnRight = turtle.turnRight
+oldTurnLeft = turtle.turnLeft
+oldDig = turtle.dig
+oldDigUp = turtle.digUp
+ 
+--POS data stored in file
+filePath = "/systems/position"
+filePath2 = "/systems/history" 
+ 
+ 
+function sendPos(sPos) --send pos over wifi
+    chnl = chnl or 5
+    rchnl = rchnl or 4
+    --local npos = getPos()
+    local modem = peripheral.wrap("right")
+    modem.transmit(5,4,sPos)
+end 
+   
+function getPos()
+   file = fs.open(filePath,"r")
+   posVar = file.readAll()
+   posVar = textutils.unserialise(posVar)
+   file.close()
+   return posVar
+end
+function putPos(posVar)
+    def = {288,109,53,"east"}
+    posVar = posVar or def
+    file = fs.open(filePath,"w")
+    posVar = textutils.serialize(posVar)
+    file.write(posVar)
+    file.close()
+end
+ 
+function turtle.forward()
+   if oldForward() then
+    file = fs.open(filePath,"r")
+    posArr = file.readAll()
+    posArr = textutils.unserialise(posArr)
+    file.close()
+    local side = posArr[4]
+    if side == "east" then 
+        posArr[1] = posArr[1]+1
+    elseif side == "west" then
+        posArr[1] = posArr[1]-1
+    elseif side == "south" then
+        posArr[3] = posArr[3]+1
+    elseif side == "north" then
+        posArr[3] = posArr[3]-1
+    end
+    file = fs.open(filePath,"w")
+    file.write(textutils.serialise(posArr))
+    file.close()
+    sendPos(posArr)
+   end
+end
+ 
+function turtle.back()
+   if oldBack() then
+    file = fs.open(filePath,"r")
+    posArr = file.readAll()
+    posArr = textutils.unserialise(posArr)
+    file.close()
+    local side = posArr[4]
+    if side == "east" then 
+        posArr[1] = posArr[1]-1
+    elseif side == "west" then
+        posArr[1] = posArr[1]+1
+    elseif side == "south" then
+        posArr[3] = posArr[3]-1
+    elseif side == "north" then
+        posArr[3] = posArr[3]+1
+    end
+    file = fs.open(filePath,"w")
+    file.write(textutils.serialise(posArr))
+    file.close()
+    sendPos(posArr)
+   end
+end
+ 
+function turtle.up()
+   if oldUp() then
+    file = fs.open(filePath,"r")
+    posArr = file.readAll()
+    posArr = textutils.unserialise(posArr)
+    file.close()
+    posArr[2] = posArr[2] + 1
+    file = fs.open(filePath,"w")
+    file.write(textutils.serialise(posArr))
+    file.close()
+    sendPos(posArr)
+   end
+end
+ 
+function turtle.down()
+   if oldDown() then
+    file = fs.open(filePath,"r")
+    posArr = file.readAll()
+    posArr = textutils.unserialise(posArr)
+    file.close()
+    posArr[2] = posArr[2] - 1
+    file = fs.open(filePath,"w")
+    file.write(textutils.serialise(posArr))
+    file.close()
+    sendPos(posArr)
+   end
+end
+ 
+function turtle.turnRight()
+     if oldTurnRight() then
+      file = fs.open(filePath,"r")
+      posArr = file.readAll()
+      posArr = textutils.unserialise(posArr)
+      file.close()
+      if posArr[4] == "north" then
+        posArr[4] = "east"
+      elseif posArr[4] == "east" then
+        posArr[4] = "south"
+      elseif posArr[4] == "south" then
+        posArr[4] = "west"
+      elseif posArr[4] == "west" then
+        posArr[4] = "north"
+      end
+      file = fs.open(filePath,"w")
+      file.write(textutils.serialise(posArr))
+      file.close()
+      sendPos(posArr)
+     end
+end
+ 
+function turtle.turnLeft()
+     if oldTurnLeft() then
+      file = fs.open(filePath,"r")
+      posArr = file.readAll()
+      posArr = textutils.unserialise(posArr)
+      file.close()
+      if posArr[4] == "north" then
+        posArr[4] = "west"
+      elseif posArr[4] == "east" then
+        posArr[4] = "north"
+      elseif posArr[4] == "south" then
+        posArr[4] = "east"
+      elseif posArr[4] == "west" then
+        posArr[4] = "south"
+      end
+      file = fs.open(filePath,"w")
+      file.write(textutils.serialise(posArr))
+      file.close()
+      sendPos(posArr)
+     end
+end
+ 
+function turtle.dig()
+    while oldDig() do
+        local nothing = nil
+    end
+end
+ 
+function turtle.digUp()
+    while oldDigUp() do
+        local nothing = nil
+    end
+end
+ 
+pos = getPos() 
+for i=1,#pos do
+    print(pos[i]) 
+end 
